@@ -1,0 +1,382 @@
+<?xml version="1.0"?>
+<robot name="playroom_ec_desk">
+
+    <!-- E. Culurciello, March 2021 -->
+    <!-- based on: https://github.com/google-research/google-research/tree/master/playrooms -->
+
+    <material name="LightGrey">
+        <color rgba="0.8 0.8 0.8 1.0"/>
+    </material>
+
+    <material name="DarkGrey">
+        <color rgba="0.2 0.2 0.2 1.0"/>
+    </material>
+
+    <material name="WoodColor">
+        <color rgba="0.5 0.4 0.3 1.0"/>
+    </material>
+
+    <material name="Red">
+        <color rgba="0.5 0.0 0.0 1"/>
+    </material>
+
+    <material name="Green">
+        <color rgba="0.0 0.5 0.0 1"/>
+    </material>
+
+    <material name="Blue">
+        <color rgba="0.0 0.0 0.5 1"/>
+    </material>
+
+    <link name="world" />
+
+    <joint name="world_joint" type="fixed">
+        <parent link="world" />
+        <child link = "Desk" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </joint>
+
+
+<!-- DESK = MAIN ITEM! -->
+
+    <link name="Desk">
+<!--         <contact>
+            <lateral_friction value="0.0"/>
+            <rolling_friction value="0.0001"/>
+            <inertia_scaling value="0.0"/>
+        </contact> -->
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="155"/>
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+        </inertial>
+
+        <visual>
+            <origin rpy="1.5707 0 0" xyz="0 -0.4 -0.2"/>
+            <geometry>
+                <mesh filename="meshes/StudyTable.stl" scale="0.01 0.01 0.01" />
+            </geometry>
+            <material name="WoodColor"/>
+        </visual>
+        <collision>
+            <origin rpy="1.5707 0 0" xyz="0 -0.4 -0.2"/>
+            <geometry>
+                <mesh filename="meshes/StudyTable.stl" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="drawer_joint" type="prismatic">
+        <parent link="Desk"/>
+        <child link="DeskDrawer"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="1.0" lower="0.0" upper="0.4" velocity="1"/>
+        <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+
+    <joint name="slide_joint" type="prismatic">
+        <parent link="Desk"/>
+        <child link="DeskSlide"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+        <axis xyz="1 0 0"/>
+        <limit effort="1.0" lower="-0.1" upper="0.5" velocity="1"/>
+        <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+
+    <joint name="button1_joint" type="prismatic">
+        <parent link="Desk"/>
+        <child link="Button1"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="1.0" lower="-0.1" upper="0.0" velocity="1"/>
+        <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+
+    <joint name="button2_joint" type="prismatic">
+        <parent link="Desk"/>
+        <child link="Button2"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="1.0" lower="-0.1" upper="0.0" velocity="1"/>
+        <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+
+    <joint name="button3_joint" type="prismatic">
+        <parent link="Desk"/>
+        <child link="Button3"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="1.0" lower="-0.1" upper="0.0" velocity="1"/>
+        <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+
+    <joint name="button1top_joint" type="prismatic">
+        <parent link="Desk"/>
+        <child link="Button1top"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="1.0" lower="-0.1" upper="0.0" velocity="1"/>
+        <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+
+    <joint name="button2top_joint" type="prismatic">
+        <parent link="Desk"/>
+        <child link="Button2top"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="1.0" lower="-0.1" upper="0.0" velocity="1"/>
+        <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+
+    <joint name="button3top_joint" type="prismatic">
+        <parent link="Desk"/>
+        <child link="Button3top"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="1.0" lower="-0.1" upper="0.0" velocity="1"/>
+        <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+
+    <joint name="drawer_handle" type="fixed">
+        <parent link="DeskDrawer"/>
+        <child link="DrawerHandle"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </joint>
+
+    <joint name="slide_handle" type="fixed">
+        <parent link="DeskSlide"/>
+        <child link="SlideHandle"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </joint>
+
+    <link name="DeskDrawer">
+<!--         <contact>
+            <lateral_friction value="1.0"/>
+            <rolling_friction value="0.0001"/>
+            <inertia_scaling value="3.0"/>
+        </contact> -->
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="2"/>
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+        </inertial>
+
+        <visual>
+            <origin rpy="1.5707 0 0" xyz="0 -0.35 0.455"/>
+            <geometry>
+                <mesh filename="meshes/Drawer_Wood.stl" scale="0.01 0.01 0.01" />
+            </geometry>
+            <material name="WoodColor"/>
+        </visual>
+
+        <collision>
+            <origin rpy="1.5707 0 0" xyz="0 -0.35 0.455"/>
+            <geometry>
+                <mesh filename="meshes/Drawer_Wood.stl" scale="0.01 0.01 0.01" />
+            </geometry>
+            <material name="WoodColor"/>
+        </collision>
+    </link>
+
+    <link name="DrawerHandle">         
+<!--         <contact>
+            <lateral_friction value="0.0"/>
+            <rolling_friction value="0.0001"/>
+            <inertia_scaling value="0.0"/>
+        </contact> -->
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="0.5"/>
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+        </inertial>
+
+        <visual>
+            <origin rpy="1.5707 0 0" xyz="0 -0.35 0.455"/>
+            <geometry>
+                <mesh filename="meshes/Drawer_Handle.stl" scale="0.01 0.01 0.01" />
+            </geometry>
+            <material name="LightGrey"/>
+        </visual>
+        <collision>
+            <origin rpy="1.5707 0 0" xyz="0 -0.35 0.455"/>
+            <geometry>
+                <mesh filename="meshes/Drawer_Handle.stl" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="DeskSlide">
+<!--         <contact>
+            <lateral_friction value="1.0"/>
+            <rolling_friction value="0.0001"/>
+            <inertia_scaling value="3.0"/>
+        </contact> -->
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="2"/>
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+        </inertial>
+
+        <visual>
+            <origin rpy="1.5707 0 0" xyz="-0.2 -0.36 0.75"/>
+            <geometry>
+                <mesh filename="meshes/Slide_Wood.stl" scale="0.01 0.01 0.01" />
+            </geometry>
+            <material name="WoodColor"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="meshes/Slide_Wood.stl" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="SlideHandle">  
+<!--         <contact>
+            <lateral_friction value="0.0"/>
+            <rolling_friction value="0.0001"/>
+            <inertia_scaling value="0.0"/>
+            </contact> -->
+        <inertial>
+            <!-- <origin rpy="0 0 0" xyz="0 0 0"/> -->
+            <mass value="0.5"/>
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+        </inertial>
+
+        <visual>
+            <origin rpy="1.5707 0 0" xyz="-0.2 -0.36 0.75"/>
+            <geometry>
+                <mesh filename="meshes/Slide_Handle.stl" scale="0.01 0.01 0.01" />
+            </geometry>
+            <material name="LightGrey"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="meshes/Slide_Handle.stl" scale="0.01 0.01 0.01" />
+            </geometry>
+        </collision>
+    </link>
+
+
+    <link name="Button1">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="0.1"/>
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0.45 -0.55 0.59"/>
+            <geometry>
+                <cylinder length="0.03" radius="0.02"/>
+            </geometry>
+            <material name="Red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.03" radius="0.02"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="Button2">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="0.1"/>
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0.30 -0.55 0.59"/>
+            <geometry>
+                <cylinder length="0.03" radius="0.02"/>
+            </geometry>
+            <material name="Green"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.03" radius="0.02"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="Button3">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="0.1"/>
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0.15 -0.55 0.59"/>
+            <geometry>
+                <cylinder length="0.03" radius="0.02"/>
+            </geometry>
+            <material name="Blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.03" radius="0.02"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="Button1top">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="0.1"/>
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0.45 -0.55 0.94"/>
+            <geometry>
+                <cylinder length="0.0075" radius="0.06"/>
+            </geometry>
+            <material name="Red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.0075" radius="0.006"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="Button2top">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="0.1"/>
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0.30 -0.55 0.94"/>
+            <geometry>
+                <cylinder length="0.0075" radius="0.06"/>
+            </geometry>
+            <material name="Green"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.0075" radius="0.06"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="Button3top">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="0.1"/>
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0.15 -0.55 0.94"/>
+            <geometry>
+                <cylinder length="0.0075" radius="0.06"/>
+            </geometry>
+            <material name="Blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.0075" radius="0.06"/>
+            </geometry>
+        </collision>
+    </link>
+
+</robot>
