@@ -39,7 +39,7 @@ class DeskGymEnv(gym.Env):
     def __init__(self,
                  camera_attached=False,
                  useIK=True, # uses IK by default!
-                 actionRepeat=1,
+                 actionRepeat=50,
                  renders=False,
                  maxSteps=100,
                  simulatedGripper=True, # 2-finger gripper
@@ -83,6 +83,10 @@ class DeskGymEnv(gym.Env):
         # pybullet.setRealTimeSimulation(False)
         pybullet.setRealTimeSimulation(True)
         pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 0)
+        # self.gox = pybullet.addUserDebugParameter("orientationX",-3.14, 3.14, 0)
+        # self.goy = pybullet.addUserDebugParameter("orientationY",-3.14, 3.14, 0)
+        # self.goz = pybullet.addUserDebugParameter("orientationZ",-3.14, 3.14, 0)
+        # self.gow = pybullet.addUserDebugParameter("orientationW",-3.14, 3.14, 1)
         pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
         pybullet.setPhysicsEngineParameter(enableFileCaching=0)
         # pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_WIREFRAME,1)
@@ -91,7 +95,7 @@ class DeskGymEnv(gym.Env):
         self.desk = Desk()
 
         # setup robot arm:
-        self.plane = pybullet.loadURDF(PLANE_URDF_PATH, [0, 0, -0.001], [0, 0, 0, 1])
+        self.plane = pybullet.loadURDF(PLANE_URDF_PATH, [0, 0, -0.001])
         self.ur5 = UR5()
 
         # object:
@@ -162,8 +166,22 @@ class DeskGymEnv(gym.Env):
         cur_p = self.ur5.get_current_pose()
         
         # actuate:
-        self.ur5.movep( (arm_action, np.asarray(cur_p[1])) )
+        # print(cur_p[1])
+        # self.ur5.movep( (arm_action, np.asarray(cur_p[1])) )
         # self.ur5.movep( (arm_action, np.asarray([0.,0.3,0.,0.9])) )
+
+        if self.task==0: 
+            orientation = np.asarray([0.0, 1.0, 0.0, 0.0])
+        elif self.task==1:
+            orientation = np.asarray([0.7, 0.0, 0.0, 1.0])
+            # orientation = np.asarray(
+            # [pybullet.readUserDebugParameter(self.gox),
+            #  pybullet.readUserDebugParameter(self.goy),
+            #  pybullet.readUserDebugParameter(self.goz),
+            #  pybullet.readUserDebugParameter(self.gow)] )
+
+        self.ur5.movep( (arm_action, orientation))
+        
         if gripper_action >= 0.0: 
             self.ur5.gripper_close()
         elif gripper_action < 0.0:
