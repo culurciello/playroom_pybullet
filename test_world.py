@@ -6,28 +6,30 @@
 
 import os, sys 
 import time
-import pybullet as p
+import pybullet
 import pybullet_data
 from collections import namedtuple
 from attrdict import AttrDict
 # import numpy as np
 
+DESK_URDF_PATH = "assets/desk/desk.urdf"
+
 class DeskEnv:
     def __init__(self):
-        p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
+        pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 0)
 
         # assets:
-        self.floor = p.loadURDF(os.path.join(pybullet_data.getDataPath(), "plane.urdf"), [0, 0, -1])
-        self.desk = p.loadURDF("playroom.urdf")
+        self.floor = pybullet.loadURDF(os.path.join(pybullet_data.getDataPath(), "plane.urdf"), [0, 0, -1])
+        self.desk = pybullet.loadURDF(DESK_URDF_PATH)
 
-        self.num_joints = p.getNumJoints(self.desk)
+        self.num_joints = pybullet.getNumJoints(self.desk)
         print('Desk number of joints:', self.num_joints)
         self.control_joints = ["drawer_joint", "slide_joint", "button1_joint", "button2_joint", "button3_joint"]
         self.joint_type_list = ["REVOLUTE", "PRISMATIC", "SPHERICAL", "PLANAR", "FIXED"]
         self.joint_info = namedtuple("jointInfo", ["id", "name", "type", "lowerLimit", "upperLimit", "maxForce", "maxVelocity", "controllable"])
         self.joints = AttrDict()
         for i in range(self.num_joints):
-            info = p.getJointInfo(self.desk, i)
+            info = pybullet.getJointInfo(self.desk, i)
             jointID = info[0]
             jointName = info[1].decode("utf-8")
             jointType = self.joint_type_list[info[2]]
@@ -38,10 +40,10 @@ class DeskEnv:
             controllable = True if jointName in self.control_joints else False
             info = self.joint_info(jointID, jointName, jointType, jointLowerLimit, jointUpperLimit, jointMaxForce, jointMaxVelocity, controllable)
             if info.type == "PRISMATIC":
-                p.setJointMotorControl2(self.desk, info.id, p.POSITION_CONTROL, targetVelocity=0, force=0)
+                pybullet.setJointMotorControl2(self.desk, info.id, pybullet.POSITION_CONTROL, targetVelocity=0, force=0)
             self.joints[jointName] = info
 
-        p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 1)
+        pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 1)
 
 
     def set_joint_pos(self, joint_pos, repeat=100):
@@ -55,26 +57,26 @@ class DeskEnv:
             indexes.append(joint.id)
             forces.append(100)
 
-        p.setJointMotorControlArray(
+        pybullet.setJointMotorControlArray(
             self.desk, indexes,
-            p.POSITION_CONTROL,
+            pybullet.POSITION_CONTROL,
             targetPositions=joint_pos,
             forces=forces
         )
         for s in range(repeat):
-            p.stepSimulation()
+            pybullet.stepSimulation()
 
 
 # testing usage:
 if __name__ == '__main__':
     # start pybullet and GUI:
-    client = p.connect(p.GUI)
-    p.setTimeStep(1.0/240.0)
-    p.setGravity(0,0,-9.8)
-    p.setRealTimeSimulation(False)
-    p.configureDebugVisualizer(p.COV_ENABLE_GUI,0)
+    client = pybullet.connect(pybullet.GUI)
+    pybullet.setTimeStep(1.0/240.0)
+    pybullet.setGravity(0,0,-9.8)
+    pybullet.setRealTimeSimulation(False)
+    pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI,0)
 
-    p.resetDebugVisualizerCamera(
+    pybullet.resetDebugVisualizerCamera(
                 cameraDistance=0.5,
                 cameraYaw=180,
                 cameraPitch=-35,

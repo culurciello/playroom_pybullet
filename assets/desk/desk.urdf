@@ -111,7 +111,7 @@
         <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
-    <joint name="button1top_joint" type="prismatic">
+<!--     <joint name="button1top_joint" type="prismatic">
         <parent link="Desk"/>
         <child link="Button1top"/>
         <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
@@ -136,7 +136,7 @@
         <axis xyz="0 0 1"/>
         <limit effort="1.0" lower="-0.1" upper="0.0" velocity="1"/>
         <dynamics damping="0.0" friction="0.0"/>
-    </joint>
+    </joint> -->
 
     <joint name="drawer_handle" type="fixed">
         <parent link="DeskDrawer"/>
@@ -319,7 +319,7 @@
         </collision>
     </link>
 
-    <link name="Button1top">
+<!--     <link name="Button1top">
         <inertial>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <mass value="0.1"/>
@@ -377,6 +377,6 @@
                 <cylinder length="0.0075" radius="0.06"/>
             </geometry>
         </collision>
-    </link>
+    </link> -->
 
 </robot>
