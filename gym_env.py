@@ -41,6 +41,7 @@ class DeskGymEnv(gym.Env):
                  useIK=True, # uses IK by default!
                  actionRepeat=50,
                  renders=False,
+                 camera_view=1,
                  maxSteps=100,
                  simulatedGripper=True, # 2-finger gripper
                  randObjPos=False,
@@ -70,32 +71,38 @@ class DeskGymEnv(gym.Env):
         if self.renders:
             pybullet.connect(pybullet.GUI)
             target = pybullet.getDebugVisualizerCamera()[11]
-            pybullet.resetDebugVisualizerCamera(
-                cameraDistance=0.5,
-                cameraYaw=180,
-                cameraPitch=-35,
-                cameraTargetPosition=[0,0.5,0.85])
+            if camera_view==0:
+                pybullet.resetDebugVisualizerCamera(cameraDistance=0.1, cameraYaw=180,
+                    cameraPitch=-35, cameraTargetPosition=[0.0, 0.5, 0.85]) # regular
+            elif camera_view==1:
+                pybullet.resetDebugVisualizerCamera(cameraDistance=0.2, cameraYaw=90,
+                    cameraPitch=-10, cameraTargetPosition=[1.0, 0.0, 0.7]) # side view button side
+            elif camera_view==2:
+                pybullet.resetDebugVisualizerCamera(cameraDistance=0.2, cameraYaw=270,
+                    cameraPitch=-10, cameraTargetPosition=[-1.0, 0.0, 0.7]) # side view slide side
         else:
             pybullet.connect(pybullet.DIRECT)
 
         pybullet.setTimeStep(1./self.sampling_freq)
         pybullet.setGravity(0,0,-9.8)
-        # pybullet.setRealTimeSimulation(False)
-        pybullet.setRealTimeSimulation(True)
+        pybullet.setRealTimeSimulation(False)
+        # pybullet.setRealTimeSimulation(True)
         pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 0)
-        # self.gox = pybullet.addUserDebugParameter("orientationX",-3.14, 3.14, 0)
-        # self.goy = pybullet.addUserDebugParameter("orientationY",-3.14, 3.14, 0)
-        # self.goz = pybullet.addUserDebugParameter("orientationZ",-3.14, 3.14, 0)
-        # self.gow = pybullet.addUserDebugParameter("orientationW",-3.14, 3.14, 1)
+        self.gox = pybullet.addUserDebugParameter("orientationX",-3.14, 3.14, 0)
+        self.goy = pybullet.addUserDebugParameter("orientationY",-3.14, 3.14, 0)
+        self.goz = pybullet.addUserDebugParameter("orientationZ",-3.14, 3.14, 0)
+        self.gow = pybullet.addUserDebugParameter("orientationW",-3.14, 3.14, 1)
         pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
         pybullet.setPhysicsEngineParameter(enableFileCaching=0)
         # pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_WIREFRAME,1)
 
-        # setup scene / desk:
+        # floor:
+        self.plane = pybullet.loadURDF(PLANE_URDF_PATH, [0, 0, -0.001])
+        
+        # setup desk:
         self.desk = Desk()
 
         # setup robot arm:
-        self.plane = pybullet.loadURDF(PLANE_URDF_PATH, [0, 0, -0.001])
         self.ur5 = UR5()
 
         # object:
@@ -130,7 +137,7 @@ class DeskGymEnv(gym.Env):
         self.stepCounter = 0
         self.current_task = 0
         self.terminated = False
-        self.ur5_or = [0.0, 1/2*math.pi, 0.0]
+        # self.ur5_or = [0.0, 1/2*math.pi, 0.0]
         self.target_pos = self.initial_target_pos
         obj_pos = self.initial_obj_pos
 
@@ -151,6 +158,41 @@ class DeskGymEnv(gym.Env):
         for i in range(int(self.sampling_freq)):
             pybullet.stepSimulation()
 
+        # debug:
+        pybullet.addUserDebugText('X', [0.30, -0.40, 0.7], [0,1,0], 1) # display target locator
+
+
+
+        # # get drawer handle pos:
+        # for i in range(10):
+        #     print(i, pybullet.getLinkState(self.desk.desk, i, computeForwardKinematics=True))
+        
+        # # crap
+
+        # # get link / joint position:
+        # # see: https://github.com/bulletphysics/bullet3/issues/2096
+
+        # drawer_handle_state = pybullet.getLinkState(self.desk.desk, 2, computeForwardKinematics=True)
+        # slide_handle_state = pybullet.getLinkState(self.desk.desk, 4, computeForwardKinematics=True)
+        # button1_state = pybullet.getLinkState(self.desk.desk, 5, computeForwardKinematics=True)
+        # base_po = pybullet.getBasePositionAndOrientation(self.desk.desk) # drawer handle
+        # # print(pybullet.getDynamicsInfo(self.desk.desk,-1))
+        # # print(pybullet.getDynamicsInfo(self.desk.desk,2))
+        # # print(pybullet.getDynamicsInfo(self.desk.desk,4))
+        # # print(pybullet.getDynamicsInfo(self.desk.desk,5))
+        # # crap
+        
+        # print(base_po)
+        # print(slide_handle_state)
+        # print('\n\n')
+        # print(base_po[0], base_po[1], 
+        #             slide_handle_state[0], slide_handle_state[1])
+
+        # flpo = pybullet.multiplyTransforms(base_po[0], base_po[1], 
+        #             slide_handle_state[0], slide_handle_state[1]) # get link transform of the base
+        # print(flpo)
+        # crap
+
         # get obs and return:
         self.getExtendedObservation()
         self.tool_initial_pos = self.tool_pos
@@ -164,13 +206,12 @@ class DeskGymEnv(gym.Env):
 
         # get current position:
         cur_p = self.ur5.get_current_pose()
-        
-        # actuate:
         # print(cur_p[1])
+
+        # actuate:
         # self.ur5.movep( (arm_action, np.asarray(cur_p[1])) )
         # self.ur5.movep( (arm_action, np.asarray([0.,0.3,0.,0.9])) )
-
-        if self.task==0: 
+        if self.task==0 or self.task==10: 
             orientation = np.asarray([0.0, 1.0, 0.0, 0.0])
         elif self.task==1:
             orientation = np.asarray([0.7, 0.0, 0.0, 1.0])
@@ -179,6 +220,16 @@ class DeskGymEnv(gym.Env):
             #  pybullet.readUserDebugParameter(self.goy),
             #  pybullet.readUserDebugParameter(self.goz),
             #  pybullet.readUserDebugParameter(self.gow)] )
+        elif self.task==2:
+            orientation = np.asarray([0.5, 0.0, 0.0, 0.5])
+            # orientation = np.asarray(
+            # [pybullet.readUserDebugParameter(self.gox),
+             # pybullet.readUserDebugParameter(self.goy),
+             # pybullet.readUserDebugParameter(self.goz),
+             # pybullet.readUserDebugParameter(self.gow)] )
+        else:
+            print('incorrect task selcted: env')
+            error(1)
 
         self.ur5.movep( (arm_action, orientation))
         

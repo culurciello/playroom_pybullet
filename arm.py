@@ -17,6 +17,8 @@ ROBOT_URDF_PATH = "assets/ur5/ur5.urdf"
 
 class UR5():
     def __init__(self,
+                 pos=[0.55, 0.15, 0.6],
+                 orientation=[0, 0, -1, 1],
                  camera_attached=False,
                  useIK=True, # here we use IK by default!
                  actionRepeat=1,
@@ -41,7 +43,7 @@ class UR5():
         
         # setup robot arm:
         flags = pybullet.URDF_USE_SELF_COLLISION
-        self.arm = pybullet.loadURDF(ROBOT_URDF_PATH, [0.6, 0.3, 0.6], [0, 0, -1, 1], flags=flags)
+        self.arm = pybullet.loadURDF(ROBOT_URDF_PATH, pos, orientation, flags=flags)
         self.num_joints = pybullet.getNumJoints(self.arm)
 
         # end effector / gripper

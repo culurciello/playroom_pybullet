@@ -40,24 +40,27 @@ if __name__ == '__main__':
 
     if args.task==0:
 
-        pos = [0.1, 0.0, 0.45, -1.0] # reach drawer + open gripper
+        pos = [0.0, 0.0, 0.5, -1.0] # reach drawer + open gripper
         obs, reward, done, info = env.step(pos)
 
-        pos = [0.1, 0.2, 0.50, -1.0] # open drawer + open gripper
+        pos = [0.0, 0.2, 0.5, -1.0] # open drawer + open gripper
         obs, reward, done, info = env.step(pos)
 
     elif args.task==1:
-        # pos = [-0.4, -0.4, 0.6, -1.0] # reach slide + open gripper
-        pos = [0., 0., 0.9, -1.0]
+        pos = [-0.4, -0.3, 0.7, -1.0] # reach slide + open gripper
         obs, reward, done, info = env.step(pos)
 
-        # pos = [-0.4, -0.4, 0.6, -1.0] # reach slide + open gripper
-        # env.step(pos)
+        pos = [0.0, -0.3, 0.7, -1.0] # reach slide + open gripper
+        obs, reward, done, info = env.step(pos)
 
     elif args.task==2:
 
-        pos = [0.25, -0.35, 0.7, 0.0] # reach buttons
-        env.step(pos)
+        pos = [0.30, 0.0, 0.70, 0.0] # approach first
+        obs, reward, done, info = env.step(pos)
+
+        pos = [0.30, -0.30, 0.70, 0.0] # reach button + closed gripper
+        # while True:
+        obs, reward, done, info = env.step(pos)
 
     elif args.task==10:
 
