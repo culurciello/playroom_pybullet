@@ -16,4 +16,8 @@ Test Desk:
 
 Test Desk + arm:
 
-```python3 test_env.py```
+```python3 test_env.py --task 0```
+
+- task 0: open drawer
+- task 1: slide to left
+- task2: push button 2 / green
