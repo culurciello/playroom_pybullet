@@ -8,7 +8,7 @@
 
 import math 
 import pybullet
-import cameras
+# import cameras
 import numpy as np
 
 
@@ -30,7 +30,7 @@ class UR5():
         self.pix_size = 0.003125
         self.obj_ids = {'fixed': [], 'rigid': [], 'deformable': []}
         self.rest_poses = [-math.pi, -math.pi/2, math.pi/2, -math.pi/2, -math.pi/2, 0]
-        self.agent_cams = cameras.RealSenseD415.CONFIG
+        # self.agent_cams = cameras.RealSenseD415.CONFIG
         self.assets_root = 'assets/'
         self.simulatedGripper = simulatedGripper
         self.actionRepeat = actionRepeat
@@ -91,10 +91,10 @@ class UR5():
     def _get_obs(self):
         # Get RGB-D camera image observations.
         obs = {'color': (), 'depth': ()}
-        for config in self.agent_cams:
-          color, depth, _ = self.render_camera(config)
-          obs['color'] += (color,)
-          obs['depth'] += (depth,)
+        # for config in self.agent_cams:
+          # color, depth, _ = self.render_camera(config)
+          # obs['color'] += (color,)
+          # obs['depth'] += (depth,)
 
         return obs
 

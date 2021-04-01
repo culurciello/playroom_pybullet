@@ -113,18 +113,18 @@ class DeskGymEnv(gym.Env):
         self.obj_ids['rigid'].append(self.obj)
 
         # gym info:
-        color_tuple = [
-            gym.spaces.Box(0, 255, config['image_size'] + (3,), dtype=np.uint8)
-            for config in self.ur5.agent_cams
-        ]
-        depth_tuple = [
-            gym.spaces.Box(0.0, 20.0, config['image_size'], dtype=np.float32)
-            for config in self.ur5.agent_cams
-        ]
-        self.observation_space = gym.spaces.Dict({
-            'color': gym.spaces.Tuple(color_tuple),
-            'depth': gym.spaces.Tuple(depth_tuple),
-        })
+        # color_tuple = [
+        #     gym.spaces.Box(0, 255, config['image_size'] + (3,), dtype=np.uint8)
+        #     for config in self.ur5.agent_cams
+        # ]
+        # depth_tuple = [
+        #     gym.spaces.Box(0.0, 20.0, config['image_size'], dtype=np.float32)
+        #     for config in self.ur5.agent_cams
+        # ]
+        # self.observation_space = gym.spaces.Dict({
+        #     'color': gym.spaces.Tuple(color_tuple),
+        #     'depth': gym.spaces.Tuple(depth_tuple),
+        # })
         self._action_bound = 1.0 # delta limits
         action_high = np.array([self._action_bound] * self.ur5.action_dim)
         self.action_space = spaces.Box(-action_high, action_high, dtype='float32')
