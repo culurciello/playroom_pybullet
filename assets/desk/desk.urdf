@@ -59,12 +59,12 @@
             </geometry>
             <material name="WoodColor"/>
         </visual>
-        <collision>
+<!--         <collision>
             <origin rpy="1.5707 0 0" xyz="0 -0.4 -0.2"/>
             <geometry>
                 <mesh filename="meshes/StudyTable.stl" scale="0.01 0.01 0.01" />
             </geometry>
-        </collision>
+        </collision> -->
     </link>
 
     <joint name="drawer_joint" type="prismatic">
@@ -227,6 +227,7 @@
             <material name="WoodColor"/>
         </visual>
         <collision>
+            <origin rpy="1.5707 0 0" xyz="-0.2 -0.36 0.75"/>
             <geometry>
                 <mesh filename="meshes/Slide_Wood.stl" scale="0.01 0.01 0.01" />
             </geometry>
@@ -253,6 +254,7 @@
             <material name="LightGrey"/>
         </visual>
         <collision>
+            <origin rpy="1.5707 0 0" xyz="-0.2 -0.36 0.75"/>
             <geometry>
                 <mesh filename="meshes/Slide_Handle.stl" scale="0.01 0.01 0.01" />
             </geometry>
@@ -274,6 +276,7 @@
             <material name="Red"/>
         </visual>
         <collision>
+            <origin rpy="0 0 0" xyz="0.45 -0.55 0.59"/>
             <geometry>
                 <cylinder length="0.03" radius="0.02"/>
             </geometry>
@@ -294,6 +297,7 @@
             <material name="Green"/>
         </visual>
         <collision>
+            <origin rpy="0 0 0" xyz="0.30 -0.55 0.59"/>
             <geometry>
                 <cylinder length="0.03" radius="0.02"/>
             </geometry>
@@ -314,6 +318,7 @@
             <material name="Blue"/>
         </visual>
         <collision>
+            <origin rpy="0 0 0" xyz="0.30 -0.55 0.59"/>
             <geometry>
                 <cylinder length="0.03" radius="0.02"/>
             </geometry>

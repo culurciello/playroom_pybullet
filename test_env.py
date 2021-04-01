@@ -29,7 +29,7 @@ args = get_args() # all input arguments
 # testing usage:
 if __name__ == '__main__':
     # initialize env:
-    env = DeskGymEnv(renders=True, actionRepeat=50)
+    env = DeskGymEnv(renders=True, actionRepeat=10, camera_view=0)
 
     # pos is: [x, y, z, gripper] gripper > 0 is closed, < 0 is open
 
@@ -38,28 +38,37 @@ if __name__ == '__main__':
 
     env.task = args.task
 
-    if args.task==0:
+    if args.task==0: # open drawer
 
-        pos = [0.0, 0.0, 0.5, -1.0] # reach drawer + open gripper
+        pos = [0.0, 0.08, 0.5, 1.0] # reach drawer
         obs, reward, done, info = env.step(pos)
 
-        pos = [0.0, 0.2, 0.5, -1.0] # open drawer + open gripper
+        pos = [0.0, 0.25, 0.55, 1.0] # open drawer
         obs, reward, done, info = env.step(pos)
 
-    elif args.task==1:
-        pos = [-0.4, -0.3, 0.7, -1.0] # reach slide + open gripper
+    elif args.task==1: # open slide to left
+
+        pos = [-0.4, -0.2, 0.8, 1.0] # reach slide
         obs, reward, done, info = env.step(pos)
 
-        pos = [0.0, -0.3, 0.7, -1.0] # reach slide + open gripper
+        pos = [-0.2, -0.2, 0.8, 1.0] # reach slide
+        obs, reward, done, info = env.step(pos)
+        
+        pos = [-0.0, -0.2, 0.8, 1.0] # reach slide
         obs, reward, done, info = env.step(pos)
 
-    elif args.task==2:
+        pos = [0.2, -0.2, 0.8, 1.0] # reach slide
+        obs, reward, done, info = env.step(pos)
+
+    elif args.task==2: # push button 2
 
         pos = [0.30, 0.0, 0.70, 0.0] # approach first
         obs, reward, done, info = env.step(pos)
 
-        pos = [0.30, -0.30, 0.70, 0.0] # reach button + closed gripper
-        # while True:
+        pos = [0.30, -0.5, 0.70, 0.0] # reach button 
+        obs, reward, done, info = env.step(pos)
+
+        pos = [0.30, -0.5, 0.60, 0.0] # push button
         obs, reward, done, info = env.step(pos)
 
     elif args.task==10:

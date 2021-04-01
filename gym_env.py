@@ -41,7 +41,8 @@ class DeskGymEnv(gym.Env):
                  useIK=True, # uses IK by default!
                  actionRepeat=50,
                  renders=False,
-                 camera_view=1,
+                 camera_view=0,
+                 task_switch_camera_view=False,
                  maxSteps=100,
                  simulatedGripper=True, # 2-finger gripper
                  randObjPos=False,
@@ -71,10 +72,10 @@ class DeskGymEnv(gym.Env):
         if self.renders:
             pybullet.connect(pybullet.GUI)
             target = pybullet.getDebugVisualizerCamera()[11]
-            if camera_view==0:
+            if camera_view==0 or (task_switch_camera_view and task==0):
                 pybullet.resetDebugVisualizerCamera(cameraDistance=0.1, cameraYaw=180,
                     cameraPitch=-35, cameraTargetPosition=[0.0, 0.5, 0.85]) # regular
-            elif camera_view==1:
+            elif camera_view==1 or (task_switch_camera_view and task==2):
                 pybullet.resetDebugVisualizerCamera(cameraDistance=0.2, cameraYaw=90,
                     cameraPitch=-10, cameraTargetPosition=[1.0, 0.0, 0.7]) # side view button side
             elif camera_view==2:
