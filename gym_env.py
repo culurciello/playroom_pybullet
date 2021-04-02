@@ -159,41 +159,6 @@ class DeskGymEnv(gym.Env):
         for i in range(int(self.sampling_freq)):
             pybullet.stepSimulation()
 
-        # debug:
-        pybullet.addUserDebugText('X', [0.30, -0.40, 0.7], [0,1,0], 1) # display target locator
-
-
-
-        # # get drawer handle pos:
-        # for i in range(10):
-        #     print(i, pybullet.getLinkState(self.desk.desk, i, computeForwardKinematics=True))
-        
-        # # crap
-
-        # # get link / joint position:
-        # # see: https://github.com/bulletphysics/bullet3/issues/2096
-
-        # drawer_handle_state = pybullet.getLinkState(self.desk.desk, 2, computeForwardKinematics=True)
-        # slide_handle_state = pybullet.getLinkState(self.desk.desk, 4, computeForwardKinematics=True)
-        # button1_state = pybullet.getLinkState(self.desk.desk, 5, computeForwardKinematics=True)
-        # base_po = pybullet.getBasePositionAndOrientation(self.desk.desk) # drawer handle
-        # # print(pybullet.getDynamicsInfo(self.desk.desk,-1))
-        # # print(pybullet.getDynamicsInfo(self.desk.desk,2))
-        # # print(pybullet.getDynamicsInfo(self.desk.desk,4))
-        # # print(pybullet.getDynamicsInfo(self.desk.desk,5))
-        # # crap
-        
-        # print(base_po)
-        # print(slide_handle_state)
-        # print('\n\n')
-        # print(base_po[0], base_po[1], 
-        #             slide_handle_state[0], slide_handle_state[1])
-
-        # flpo = pybullet.multiplyTransforms(base_po[0], base_po[1], 
-        #             slide_handle_state[0], slide_handle_state[1]) # get link transform of the base
-        # print(flpo)
-        # crap
-
         # get obs and return:
         self.getExtendedObservation()
         self.tool_initial_pos = self.tool_pos
@@ -206,12 +171,9 @@ class DeskGymEnv(gym.Env):
         gripper_action = action[self.ur5.action_dim-1].astype(float) # gripper - range: [-1=closed,1=open]
 
         # get current position:
-        cur_p = self.ur5.get_current_pose()
-        # print(cur_p[1])
+        # cur_p = self.ur5.get_current_pose()
 
         # actuate:
-        # self.ur5.movep( (arm_action, np.asarray(cur_p[1])) )
-        # self.ur5.movep( (arm_action, np.asarray([0.,0.3,0.,0.9])) )
         if self.task==0 or self.task==10: 
             orientation = np.asarray([0.0, 1.0, 0.0, 0.0])
         elif self.task==1:
